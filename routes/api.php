@@ -119,6 +119,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // routes/api.php
 
+Route::put('/product-update', [CartController::class, 'update']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/product/delete-all-product',[SurveyController::class,'deleteAllProduct']);

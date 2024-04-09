@@ -205,9 +205,9 @@ class DetailsController extends Controller
 
 
     ]);
-    Both::create($validator->validated());
+    //Both::create($validator->validated());
 
-    return Cart::create($validator->validated());
+    return Both::create($validator->validated());
     }
 
 

@@ -31,10 +31,10 @@ class SurveyController extends Controller
 
 
 
-        
 
-       
-        
+
+
+
 
         $data =  Survey::with(['category'])
         ->where('user_id', $user->id)
@@ -45,7 +45,7 @@ class SurveyController extends Controller
                       ->orWhereHas('category',function($query) use ($search){
                     $query->where('category','LIKE', '%'.$search.'%');
                 });
-  
+
         })
          ->orderBy($sortField, $sortDirection)
         ->paginate($perPage);
@@ -53,7 +53,7 @@ class SurveyController extends Controller
         return SurveyResource::collection($data);
 
      }
-    
+
 
      //$users = \App\Models\User::whereDate('created_at', '<=', now()->subDays(30))->delete();
 //dd($users);
@@ -70,7 +70,7 @@ class SurveyController extends Controller
 
         $survey = Survey::create($data);
 
-        
+
 
         return new SurveyResource($survey);
     }
@@ -83,7 +83,7 @@ class SurveyController extends Controller
      */
     public function show(Survey $survey, Request $request)
     {
-        
+
 
         return new SurveyResource($survey);
     }
@@ -94,8 +94,8 @@ class SurveyController extends Controller
      * @param \App\Models\Survey $survey
      * @return \Illuminate\Http\Response
      */
-    
-   
+
+
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
         $data = $request->validated();
@@ -118,21 +118,21 @@ $user = $request->user();
                 'error' => 'Secret Word  is incorrect'
             ], 423);
         }else{
-            
+
             $survey->update($data);
 
         }
 
         // Update survey in the database
 
-         
+
         return new SurveyResource($survey);
     }
 
-   
+
     public function destroy(Survey $survey, Request $request)
     {
-        
+
 
         $survey->delete();
 
@@ -145,7 +145,7 @@ $user = $request->user();
         return response('', 204);
     }
 
- 
+
     private function saveImage($image)
     {
         // Check if image is valid base64 string
@@ -185,14 +185,14 @@ $user = $request->user();
     {
 
 
-                        
+
  $id = $request->data;
  foreach($id as $member){
     Survey::where('id',$member)->delete();
 
- } 
-    
- 
+ }
+
+
 
 
         return response('', 204);
@@ -207,17 +207,17 @@ $user = $request->user();
         foreach ($data['products'] as $question) {
              $this->createQuestion($question);
         }
-    
+
      }
 
      private function createQuestion($data)
 {
 
-     
+
 if (isset($data['selected'])) {
     $data['category_id'] =   $data['selected']  ;
 }
- 
+
 $validator = Validator::make($data, [
             'user_id'=> '',
             'productName' => 'required|string|max:1000',

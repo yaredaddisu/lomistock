@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Both;
 use App\Models\Cart;
 use App\Models\StockIn;
 use App\Models\Survey;
@@ -13,8 +14,10 @@ class LineChartController extends Controller
     {
 
         $user = $request->user();
-                $data = StockIn::query()
+                $data = Both::query()
                 ->where('user_id', $user->id)
+                                ->where('Transaction', "Stock In")
+
         ->selectRaw('
             MAX(id) as id,
              SUM(quantity) as quantity,
@@ -24,8 +27,9 @@ class LineChartController extends Controller
         ->groupBy(  'date' )
         ->get();
 
-        $data1 = Cart::query()
+        $data1 = Both::query()
         ->where('user_id', $user->id)
+                ->where('Transaction', "Stock Out")
 
         ->selectRaw('
             MAX(id) as id,

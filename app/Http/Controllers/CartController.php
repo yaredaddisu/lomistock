@@ -30,7 +30,7 @@ class CartController extends Controller
         $dateFilter = $request->keyword;
         $id = $request->id;
         $user = $request->user();
-        $query = Cart::query()
+        $query = Both::query()
         ->where('user_id', $user->id)
         ->where('Transaction','=', 'Stock Out')
          ->where(function($query) use ($search){
@@ -110,7 +110,7 @@ class CartController extends Controller
                 $search = request('search', '');
                 $dateFilter = $request->keyword;
 
-        $query = StockIn::query()
+        $query = Both::query()
         ->where('user_id', $user->id)
         ->where('Transaction','=', 'Stock In')
          ->where(function($query) use ($search){
@@ -412,8 +412,8 @@ $car = $validator = Validator::make($data, [
 
 
 
-$survey = Cart::create($validator->validated());
- Both::create($validator->validated());
+//$survey = Cart::create($validator->validated());
+$survey =  Both::create($validator->validated());
 
 return new TempPrintResource($survey);
 
@@ -475,17 +475,61 @@ $validator = Validator::make($data, [
 
 ]);
 
-$survey = StockIn::create($validator->validated());
-Both::create($validator->validated());
+//$survey = StockIn::create($validator->validated());
+$survey = Both::create($validator->validated());
 
 return new StockInResource($survey);
 
 
 
 }
+public function update(CartRequest $request)
+{
+    $data = $request->validated();
 
+    foreach ($data['cart'] as $item) {
+        // Validate each item against the defined rules
+        $validator = Validator::make($item, [
+            'user_id' => 'exists:users,id',
+            'survey_id' => 'exists:surveys,id',
+            'house_id' => 'exists:warehouses,id',
+            'creator' => 'required',
+            'productName' => 'string',
+            'salesPrice' => 'numeric',
+            'purchasePrice' => 'numeric',
+            'barCode' => 'string|nullable',
+            'remaining' => 'numeric',
+            'previous' => 'numeric',
+            'quantity' => 'numeric',
+            'Transaction' => 'string',
+            'reference' => 'string|nullable'
+            // Add validation rules for other fields as needed
+        ]);
 
-public function show(Cart $cart, Request $request)
+        if ($validator->fails()) {
+            // Handle validation errors (e.g., return a response indicating validation failure)
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        // Calculate the remaining value for the item
+        $remaining = $item['previous'] + $item['quantity'];
+        $quantity = $item['quantity'];
+        $previous = $item['previous'];
+
+        // Update the item in the database
+        $cartItem = Both::findOrFail($item['id']);
+        $cartItem->remaining = $remaining;
+                $cartItem->quantity = $quantity;
+                $cartItem->previous = $previous;
+
+        $cartItem->save();
+    }
+
+    // Return a success response if all items are updated successfully
+    return response()->json(['message' => 'Cart items updated successfully']);
+}
+
+public function show(Both $cart, Request $request)
 {
 
 
@@ -523,7 +567,7 @@ public function deleteAll(Request $request)
     }else{
         $id = $request->data;
         foreach($id as $cart){
-        StockIn::where('id',$cart)->delete();
+        Both::where('id',$cart)->delete();
 
     }
 }

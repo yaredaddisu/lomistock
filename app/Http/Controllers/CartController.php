@@ -502,7 +502,9 @@ public function update(CartRequest $request)
             'previous' => 'numeric',
             'quantity' => 'numeric',
             'Transaction' => 'string',
-            'reference' => 'string|nullable'
+            'reference' => 'string|nullable',
+            'updated' => 'boolean',
+
             // Add validation rules for other fields as needed
         ]);
 
@@ -511,16 +513,23 @@ public function update(CartRequest $request)
             return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
         }
 
+
+
         // Calculate the remaining value for the item
         $remaining = $item['previous'] + $item['quantity'];
         $quantity = $item['quantity'];
         $previous = $item['previous'];
+        $totalStockOutPrice = $item['salesPrice'] * $item['quantity']  * -1;
+        $profit = (($item['salesPrice'] -  $item['purchasePrice']) * $item['quantity'] ) * -1;
 
         // Update the item in the database
         $cartItem = Both::findOrFail($item['id']);
         $cartItem->remaining = $remaining;
                 $cartItem->quantity = $quantity;
                 $cartItem->previous = $previous;
+                $cartItem->profit = $profit;
+                $cartItem->totalStockOutPrice = $totalStockOutPrice;
+                $cartItem->updated = 1;
 
         $cartItem->save();
     }

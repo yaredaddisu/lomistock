@@ -30,7 +30,7 @@ class CreateBothsTable extends Migration
             $table->longText('creator')->nullable();
             $table->longText('Transaction')->nullable();
             $table->longText('reference')->nullable();
-
+            $table->tinyInteger('status');
             $table->longText('totalStockOutPrice')->nullable();
             $table->foreignIdFor(User::class, 'user_id');
              $table->foreignIdFor(Survey::class, 'survey_id');

@@ -519,16 +519,23 @@ public function update(CartRequest $request)
         $remaining = $item['previous'] + $item['quantity'];
         $quantity = $item['quantity'];
         $previous = $item['previous'];
-        $totalStockOutPrice = $item['salesPrice'] * $item['quantity']  * -1;
-        $profit = (($item['salesPrice'] -  $item['purchasePrice']) * $item['quantity'] ) * -1;
+
+        if( $item['Transaction'] == "Stock Out"){
+            $totalStockOutPrice = $item['salesPrice'] * $item['quantity']  * -1;
+            $profit = (($item['salesPrice'] -  $item['purchasePrice']) * $item['quantity'] ) * -1;
+
+        }
 
         // Update the item in the database
         $cartItem = Both::findOrFail($item['id']);
         $cartItem->remaining = $remaining;
                 $cartItem->quantity = $quantity;
                 $cartItem->previous = $previous;
-                $cartItem->profit = $profit;
-                $cartItem->totalStockOutPrice = $totalStockOutPrice;
+                if( $item['Transaction'] == "Stock Out"){
+                    $cartItem->profit = $profit;
+                    $cartItem->totalStockOutPrice = $totalStockOutPrice;
+                }
+
                 $cartItem->updated = 1;
 
         $cartItem->save();

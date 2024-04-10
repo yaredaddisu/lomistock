@@ -27,11 +27,14 @@ class StockInResource extends JsonResource
             'purchasePrice' => $this->purchasePrice,
             'salesPrice' => $this->salesPrice,
             'previous' =>$this->previous,
+            'updated' => $this->updated,
             'quantity' => $this->quantity,
             'remaining' =>$this->remaining,
             'Transaction' => $this->Transaction,
             'cart_date' =>Carbon::parse($this->created_at)->toDateString(),
-            'created_at' => (new DateTime($this->created_at))->format('D M, Y-m-d '),
+            'created_at' => (new DateTime($this->created_at))->format('D , Y-m-d '),
+            'updated_at' => (new DateTime($this->updated_at))->format('D , Y-m-d '),
+
          ];
     }
 }

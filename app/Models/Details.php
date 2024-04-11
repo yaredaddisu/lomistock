@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Both;
 use App\Models\Cart;
-use App\Models\User;
 use App\Models\TempPrint;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Details extends Model
 {
 
-    protected $fillable = [ 
+    protected $fillable = [
         'amount',
         'tax',
         'shipping',
@@ -32,12 +33,12 @@ class Details extends Model
 'Note',
 'Due'
 
-    ]; 
+    ];
     use HasFactory;
 
     public function questions()
 {
-    return $this->hasMany(Cart::class);
+    return $this->hasMany(Both::class);
 }
 
 public function user()

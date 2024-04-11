@@ -45,7 +45,7 @@ class UserReportsController extends Controller
                 SUM(totalStockOutPrice) as totalStockOutPrice,
                 MAX(Transaction) as Transaction,
                 MAX(created_at) as created_at,
-                (SELECT remaining FROM carts AS c2 WHERE c2.productName = carts.productName AND c2.barCode = carts.barCode AND c2.user_id = carts.user_id ORDER BY c2.updated_at DESC LIMIT 1) as remaining
+                (SELECT remaining FROM boths AS c2 WHERE c2.productName = boths.productName AND c2.barCode = boths.barCode AND c2.user_id = boths.user_id ORDER BY c2.updated_at DESC LIMIT 1) as remaining
             ')
             ->where('user_id',$id)
             ->where('Transaction',"Stock Out")

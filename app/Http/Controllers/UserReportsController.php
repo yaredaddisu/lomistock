@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserReportsResource;
+use App\Models\Both;
 use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class UserReportsController extends Controller
         $dateFilter = $request->keyword;
 
 
-        $query = Cart::with('house')
+        $query = Both::with('house')
             ->selectRaw('
                 MAX(id) as id,
                  productName,
@@ -47,6 +48,8 @@ class UserReportsController extends Controller
                 (SELECT remaining FROM carts AS c2 WHERE c2.productName = carts.productName AND c2.barCode = carts.barCode AND c2.user_id = carts.user_id ORDER BY c2.updated_at DESC LIMIT 1) as remaining
             ')
             ->where('user_id',$id)
+            ->where('Transaction',"Stock Out")
+
              ->groupBy('productName', 'barCode','user_id','house_id'   )
 
             ->where(function($query) use ($search) {

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Cart;
+use App\Models\Both;
 use App\Models\Category;
 use App\Models\StockIn;
-use App\Models\TempCart;
+use App\Models\TempBoth;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,15 +21,15 @@ class Survey extends Model
 
    public function stocks()
    {
-       return $this->hasMany(StockIn::class);
+       return $this->hasMany(Both::class);
    }
    public function stockOut()
    {
-       return $this->hasMany(Cart::class);
+       return $this->hasMany(Both::class);
    }
    public function products()
    {
-       return $this->hasMany(Cart::class);
+       return $this->hasMany(Both::class);
    }
    public function user()
     {
@@ -37,7 +37,7 @@ class Survey extends Model
     }
    public function temps()
    {
-       return $this->hasMany(TempCart::class);
+       return $this->hasMany(TempBoth::class);
    }
 
 

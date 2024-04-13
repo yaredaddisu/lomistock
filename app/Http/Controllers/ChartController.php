@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Both;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -12,8 +13,9 @@ class ChartController extends Controller
 {
 
      $user = $request->user();
-        $query = Cart::with('category')
-        ->where('user_id', $user->id);
+        $query = Both::with('category')
+        ->where('user_id', $user->id)
+        ->where('Transaction','=', 'Stock Out');
 
         $dateFilter = $request->keyword;
 
@@ -62,7 +64,9 @@ public function filterByMonth(Request $request)
 
 
         // Perform filtering
-        $query = Cart::with('category')
+        $query = Both::with('category')
+        ->where('Transaction','=', 'Stock Out')
+
             ->where('user_id', $user->id);
 
         switch(strtolower($month)) {

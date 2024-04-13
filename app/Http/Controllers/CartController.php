@@ -264,7 +264,7 @@ class CartController extends Controller
       public function getStockedSum(Request $request)
       {
           $user = $request->user();
-          $query = DB::table('carts')
+          $query = DB::table('boths')
           ->where('Transaction','=', 'Stock Out')
           ->where('user_id',$user->id);
 
@@ -310,8 +310,10 @@ class CartController extends Controller
         ->sum('quantity');
 
 
-        $todayStockOut = DB::table('carts')
+        $todayStockOut = DB::table('boths')
         ->where('user_id',$user->id)
+        ->where('Transaction','=', 'Stock Out')
+
         ->whereDate('created_at',Carbon::today())
         ->sum('quantity');
 

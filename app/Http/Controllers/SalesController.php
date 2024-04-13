@@ -15,7 +15,7 @@ class SalesController extends Controller
         $dateFilter = $request->keyword;
 
         $query = Survey::with(['category', 'stockOut' => function ($query) use ($dateFilter) {
-             switch($dateFilter) {
+            switch($dateFilter) {
                 case 'today':
                     $query->whereDate('created_at', Carbon::today());
                     break;
@@ -26,7 +26,7 @@ class SalesController extends Controller
                     $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
                     break;
                 case 'last_week':
-                    $query->whereBetween('created_at', [Carbon::now()->subWeek(), Carbon::now()]);
+                    $query->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]);
                     break;
                 case 'this_month':
                     $query->whereMonth('created_at', Carbon::now()->month);
@@ -41,15 +41,18 @@ class SalesController extends Controller
                     $query->whereYear('created_at', Carbon::now()->subYear()->year);
                     break;
             }
+            // Filter only stock out transactions
+            $query->where('Transaction', 'Stock Out');
             // Order the 'stockOut' relationship by 'created_at' in descending order
             $query->orderBy('created_at', 'DESC');
         }])
         ->where('user_id', $user->id)
-        ->where('stockOut.Transaction', "Stock Out");
+        ->orderBy('updated_at', 'DESC')
+        ->get();
 
-        $data = $query->orderBy('updated_at', 'DESC')->get();
+        return response()->json($query);
 
-        return response()->json($data);
+
     }
 
     public function filterByMonth(Request $request)
@@ -59,8 +62,6 @@ class SalesController extends Controller
 
         // Perform filtering
         $query = Survey::with(['category', 'stockOut'])
-        ->where('stockOut.Transaction', "Stock Out")
-
             ->where('user_id', $user->id);
 
         switch(strtolower($month)) {
@@ -102,9 +103,18 @@ class SalesController extends Controller
                 break;
         }
 
-        $data = $query->orderBy('updated_at', 'DESC')->get();
-             return response()->json($data);
+        // Filter only stock out transactions
+        $query->whereHas('stockOut', function ($query) {
+            $query->where('Transaction', 'Stock Out');
+        });
 
+        // Order the 'stockOut' relationship by 'created_at' in descending order
+        $query->with(['stockOut' => function ($query) {
+            $query->orderBy('created_at', 'DESC');
+        }]);
+
+        $data = $query->orderBy('updated_at', 'DESC')->get();
+        return response()->json($data);
 
     }
 

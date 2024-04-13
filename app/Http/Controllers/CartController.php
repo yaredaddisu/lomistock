@@ -312,8 +312,6 @@ class CartController extends Controller
 
         $todayStockOut = DB::table('boths')
         ->where('user_id',$user->id)
-        ->where('Transaction','=', 'Stock Out')
-
         ->whereDate('created_at',Carbon::today())
         ->sum('quantity');
 
@@ -432,11 +430,11 @@ public function StockIn(CartRequest $request){
 
 
 
-        $this->CartStockIn($question);
+        $this->bothstockIn($question);
    }
 }
 
-private function CartStockIn($data)
+private function bothstockIn($data)
 {
 
 

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Both extends Model
 {
     use HasFactory;
-        protected $fillable = ['updated', 'details_id','reference','house_id','creator', 'survey_id','salesPrice','Transaction','totalStockOutPrice','purchasePrice','user_id','quantity','previous','productName','profit','barCode','remaining'];
+        protected $fillable = ['updated','reference','house_id','creator', 'survey_id','salesPrice','Transaction','totalStockOutPrice','purchasePrice','user_id','quantity','previous','productName','profit','barCode','remaining'];
 
 
         public function product()

@@ -61,7 +61,7 @@ class LogoController extends Controller
 
     public function show(Logo $logo, Request $request)
     {
-       
+
 
         return new LogoResource($logo);
     }
@@ -140,14 +140,14 @@ class LogoController extends Controller
     public function deleteAll(Request $request)
     {
 
-        foreach($request->data as $id){
-     Logo::whereIn('id', $id)->delete();
 
+ $id = $request->data;
+ foreach($id as $user){
+    Logo::where('id',$user)->delete();
 
-        }
+ }
 
-
-        return response('', 204);
+         return response()->noContent();
 
 
     }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Both;
-use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -14,8 +13,9 @@ class ChartController extends Controller
 
      $user = $request->user();
         $query = Both::with('category')
-        ->where('user_id', $user->id)
-        ->where('Transaction','=', 'Stock Out');
+        ->where('Transaction','=', 'Stock Out')
+
+        ->where('user_id', $user->id);
 
         $dateFilter = $request->keyword;
 

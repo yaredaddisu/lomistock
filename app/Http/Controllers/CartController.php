@@ -182,7 +182,7 @@ class CartController extends Controller
      public function getSum(Request $request)
      {
          $user = $request->user();
-         $query = DB::table('carts')
+         $query = DB::table('boths')
          ->where('Transaction','=', 'Stock Out')
          ->where('user_id',$user->id);
 
@@ -224,7 +224,7 @@ class CartController extends Controller
    public function getStockInSum(Request $request)
       {
           $user = $request->user();
-          $query = DB::table('stock_ins')
+          $query = DB::table('boths')
           ->where('Transaction','=', 'Stock In')
           ->where('user_id',$user->id);
 

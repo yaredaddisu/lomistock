@@ -44,7 +44,8 @@ class SalesController extends Controller
             // Order the 'stockOut' relationship by 'created_at' in descending order
             $query->orderBy('created_at', 'DESC');
         }])
-        ->where('user_id', $user->id);
+        ->where('user_id', $user->id)
+        ->where('stockOut.Transaction', "Stock Out");
 
         $data = $query->orderBy('updated_at', 'DESC')->get();
 
@@ -58,6 +59,8 @@ class SalesController extends Controller
 
         // Perform filtering
         $query = Survey::with(['category', 'stockOut'])
+        ->where('stockOut.Transaction', "Stock Out")
+
             ->where('user_id', $user->id);
 
         switch(strtolower($month)) {
